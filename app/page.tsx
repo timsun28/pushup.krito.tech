@@ -92,7 +92,10 @@ export default function Home() {
             </select>
             <div className="flex flex-col items-center justify-center gap-4 dark:text-white">
                 {weeks[week].map((day, index) => (
-                    <div className="flex w-full items-center justify-end gap-2">
+                    <div
+                        key={day}
+                        className="flex w-full items-center justify-end gap-2"
+                    >
                         <label
                             htmlFor={day.toString()}
                             className="text-2xl font-bold"
