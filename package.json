@@ -8,6 +8,7 @@
         "start": "next start",
         "lint": "next lint"
     },
+    "type": "module",
     "dependencies": {
         "@serwist/next": "^8.4.2",
         "@serwist/sw": "^8.4.2",
