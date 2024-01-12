@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
     title: "Pushup budddy",
     description: "A pushup budddy to help you get fit",
+    manifest: "/manifest.json",
 };
 export default function RootLayout({
     children,
@@ -16,7 +17,6 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <link rel="manifest" href="/manifest.json" />
                 <link
                     rel="apple-touch-icon"
                     sizes="180x180"
