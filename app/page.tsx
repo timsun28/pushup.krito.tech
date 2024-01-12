@@ -93,7 +93,7 @@ export default function Home() {
             <div className="flex flex-col items-center justify-center gap-4 dark:text-white">
                 {weeks[week].map((day, index) => (
                     <div
-                        key={day}
+                        key={index}
                         className="flex w-full items-center justify-end gap-2"
                     >
                         <label
