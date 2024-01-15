@@ -127,8 +127,8 @@ export default function Home() {
                     Reset
                 </button>
                 <div className="text-2xl font-bold dark:text-white">
-                    {Math.floor(timer / 60)}:{timer % 60}
-                    {timer % 60 < 10 ? "0" : ""}
+                    {Math.floor(timer / 60)}:{timer % 60 < 10 ? "0" : ""}
+                    {timer % 60}
                 </div>
             </div>
         </main>
