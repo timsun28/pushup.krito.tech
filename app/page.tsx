@@ -54,7 +54,7 @@ export default function Home() {
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
 
-        if (isActive) {
+        if (isActive && timer > 0) {
             interval = setInterval(() => {
                 setTimer((timer) => timer - 1);
             }, 1000);
@@ -67,7 +67,7 @@ export default function Home() {
                 clearInterval(interval);
             }
         };
-    }, [isActive]);
+    }, [isActive, timer]);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
