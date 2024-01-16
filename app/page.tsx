@@ -1,5 +1,40 @@
 "use client";
+import { Timer } from "@/components/Timer";
 import { useEffect, useState } from "react";
+
+// Custom hook for managing local storage
+function useLocalStorage(key: string, initialValue: number) {
+    const [storedValue, setStoredValue] = useState(initialValue);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
+
+    useEffect(() => {
+        if (isClient) {
+            try {
+                const item = window.localStorage.getItem(key);
+                setStoredValue(item ? JSON.parse(item) : initialValue);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }, [isClient, key, initialValue]);
+
+    const setValue = (value: any) => {
+        try {
+            setStoredValue(value);
+            if (isClient) {
+                window.localStorage.setItem(key, JSON.stringify(value));
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    return [storedValue, setValue] as const;
+}
 
 export default function Home() {
     const weeks = [
@@ -28,46 +63,8 @@ export default function Home() {
         [16, 17, 25, 25, 19, 14, 19, 14, 16, 46],
         [17, 22, 28, 28, 21, 16, 22, 19, 14, 50],
     ];
-    useEffect(() => {
-        const initialWeek = localStorage.getItem("selectedWeek");
-        if (initialWeek) {
-            setWeek(parseInt(initialWeek));
-            setTimer(parseInt(initialWeek) < 6 ? 60 : 120);
-        }
-    }, []);
 
-    const [week, setWeek] = useState(0);
-
-    // two minute timer
-    const [timer, setTimer] = useState(week < 6 ? 60 : 120);
-    const [isActive, setIsActive] = useState(false);
-
-    function toggle() {
-        setIsActive(!isActive);
-    }
-
-    function reset() {
-        setTimer(week < 6 ? 60 : 120);
-        setIsActive(false);
-    }
-
-    useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
-
-        if (isActive && timer > 0) {
-            interval = setInterval(() => {
-                setTimer((timer) => timer - 1);
-            }, 1000);
-        } else if (interval) {
-            clearInterval(interval);
-        }
-
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-    }, [isActive, timer]);
+    const [week, setWeek] = useLocalStorage("selectedWeek", 0);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
@@ -76,9 +73,6 @@ export default function Home() {
                 onChange={(event) => {
                     const weekNumber = parseInt(event.target.value);
                     setWeek(weekNumber);
-                    setTimer(weekNumber < 6 ? 60 : 120);
-                    // save in local storage
-                    localStorage.setItem("selectedWeek", weekNumber.toString());
                 }}
                 value={week}
             >
@@ -109,28 +103,7 @@ export default function Home() {
                     </div>
                 ))}
             </div>
-            <div className="flex items-center gap-4">
-                <button
-                    className=" rounded-lg border-2 border-black p-4 shadow-lg dark:border-white dark:text-white"
-                    onClick={() => {
-                        toggle();
-                    }}
-                >
-                    {isActive ? "Pause" : "Start"}
-                </button>
-                <button
-                    className=" rounded-lg border-2 border-black p-4 shadow-lg dark:border-white dark:text-white"
-                    onClick={() => {
-                        reset();
-                    }}
-                >
-                    Reset
-                </button>
-                <div className="text-2xl font-bold dark:text-white">
-                    {Math.floor(timer / 60)}:{timer % 60 < 10 ? "0" : ""}
-                    {timer % 60}
-                </div>
-            </div>
+            <Timer week={week} />
         </main>
     );
 }
