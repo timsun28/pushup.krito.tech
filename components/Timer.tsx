@@ -26,7 +26,7 @@ function useTimer(initialTime: number, isActive: boolean) {
 }
 
 export const Timer = ({ week }: { week: number }) => {
-    const SHORT_TIME = 10;
+    const SHORT_TIME = 60;
     const LONG_TIME = 120;
     const WEEK_THRESHOLD = 6;
     const initialTime = week < WEEK_THRESHOLD ? SHORT_TIME : LONG_TIME;
