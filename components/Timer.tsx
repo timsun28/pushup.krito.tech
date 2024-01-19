@@ -26,12 +26,12 @@ function useTimer(initialTime: number, isActive: boolean) {
 }
 
 export const Timer = ({ week }: { week: number }) => {
-    const SHORT_TIME = 60;
+    const SHORT_TIME = 10;
     const LONG_TIME = 120;
     const WEEK_THRESHOLD = 6;
     const initialTime = week < WEEK_THRESHOLD ? SHORT_TIME : LONG_TIME;
     const [isActive, setIsActive] = useState(false);
-    const [timer, setTimer] = useTimer(initialTime, false);
+    const [timer, setTimer] = useTimer(initialTime, isActive);
 
     const toggle = useCallback(() => {
         setIsActive(!isActive);
@@ -43,26 +43,17 @@ export const Timer = ({ week }: { week: number }) => {
     }, [week]);
 
     useEffect(() => {
-        setTimer(week < 6 ? 60 : 120);
+        setTimer(week < WEEK_THRESHOLD ? SHORT_TIME : LONG_TIME);
     }, [week]);
 
+    // Reset the timer when it reaches 0
     useEffect(() => {
-        let interval: NodeJS.Timeout | null = null;
-
-        if (isActive && timer > 0) {
-            interval = setInterval(() => {
-                setTimer((timer) => timer - 1);
-            }, 1000);
-        } else if (interval) {
-            clearInterval(interval);
+        if (timer === 0) {
+            setIsActive(false);
+            setTimer(week < WEEK_THRESHOLD ? SHORT_TIME : LONG_TIME);
         }
+    }, [timer]);
 
-        return () => {
-            if (interval) {
-                clearInterval(interval);
-            }
-        };
-    }, [isActive, timer]);
     return (
         <div className="flex items-center gap-4">
             <button

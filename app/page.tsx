@@ -1,4 +1,5 @@
 "use client";
+import { Confetti } from "@/components/Confetti";
 import { Timer } from "@/components/Timer";
 import { useEffect, useState } from "react";
 
@@ -37,6 +38,8 @@ function useLocalStorage(key: string, initialValue: number) {
 }
 
 export default function Home() {
+    const [finished, setFinished] = useState(false);
+
     const weeks = [
         [2, 3, 2, 2, 3],
         [3, 4, 3, 2, 4],
@@ -99,11 +102,24 @@ export default function Home() {
                             type="checkbox"
                             key={index}
                             className="h-12 w-12 rounded-lg p-4 shadow-lg"
+                            onChange={() => {
+                                // Check if all checkboxes are checked
+                                const checkboxes = document.querySelectorAll(
+                                    "input[type=checkbox]",
+                                );
+                                const checked = document.querySelectorAll(
+                                    "input[type=checkbox]:checked",
+                                );
+                                if (checkboxes.length === checked.length) {
+                                    setFinished(true);
+                                }
+                            }}
                         />
                     </div>
                 ))}
             </div>
             <Timer week={week} />
+            {finished && <Confetti />}
         </main>
     );
 }
