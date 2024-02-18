@@ -1,7 +1,7 @@
 "use client";
 import { Confetti } from "@/components/Confetti";
-import { Timer } from "@/components/Timer";
-import { useEffect, useState } from "react";
+import { Timer, TimerHandle } from "@/components/Timer";
+import { useEffect, useRef, useState } from "react";
 
 // Custom hook for managing local storage
 function useLocalStorage(key: string, initialValue: number) {
@@ -68,6 +68,7 @@ export default function Home() {
     ];
 
     const [week, setWeek] = useLocalStorage("selectedWeek", 0);
+    const timerRef = useRef<TimerHandle | null>(null);
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
@@ -110,6 +111,10 @@ export default function Home() {
                                 const checked = document.querySelectorAll(
                                     "input[type=checkbox]:checked",
                                 );
+                                console.log({ timer: timerRef.current });
+                                if (timerRef && timerRef.current) {
+                                    timerRef.current.toggle();
+                                }
                                 if (checkboxes.length === checked.length) {
                                     setFinished(true);
                                 }
@@ -118,7 +123,7 @@ export default function Home() {
                     </div>
                 ))}
             </div>
-            <Timer week={week} />
+            <Timer ref={timerRef} week={week} />
             {finished && <Confetti />}
         </main>
     );
