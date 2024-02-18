@@ -73,7 +73,7 @@ export default function Home() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
             <select
-                className="h-16 w-full rounded-lg p-4 shadow-lg"
+                className="h-16  max-w-md w-full rounded-lg p-4 shadow-lg"
                 onChange={(event) => {
                     const weekNumber = parseInt(event.target.value);
                     setWeek(weekNumber);
