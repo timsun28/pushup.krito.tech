@@ -73,7 +73,7 @@ export default function Home() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
             <select
-                className="h-16  max-w-md w-full rounded-lg p-4 shadow-lg"
+                className="h-16  w-full max-w-md rounded-lg p-4 shadow-lg"
                 onChange={(event) => {
                     const weekNumber = parseInt(event.target.value);
                     setWeek(weekNumber);
@@ -87,19 +87,19 @@ export default function Home() {
                 ))}
             </select>
             <div className="flex flex-col items-center justify-center gap-4 dark:text-white">
-                {weeks[week].map((day, index) => (
+                {weeks[week].map((amountOfPushups, index) => (
                     <div
                         key={index}
                         className="flex w-full items-center justify-end gap-2"
                     >
                         <label
-                            htmlFor={day.toString()}
+                            htmlFor={amountOfPushups.toString()}
                             className="text-2xl font-bold"
                         >
-                            {day}
+                            {amountOfPushups}
                         </label>
                         <input
-                            id={day.toString()}
+                            id={amountOfPushups.toString()}
                             type="checkbox"
                             key={index}
                             className="h-12 w-12 rounded-lg p-4 shadow-lg"
@@ -111,9 +111,11 @@ export default function Home() {
                                 const checked = document.querySelectorAll(
                                     "input[type=checkbox]:checked",
                                 );
-                                console.log({ timer: timerRef.current });
                                 if (timerRef && timerRef.current) {
-                                    timerRef.current.toggle();
+                                    // If this is the final checkbox, don't start the timer
+                                    if (checkboxes.length !== checked.length) {
+                                        timerRef.current.toggle();
+                                    }
                                 }
                                 if (checkboxes.length === checked.length) {
                                     setFinished(true);
