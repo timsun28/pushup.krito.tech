@@ -1,14 +1,51 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const APP_NAME = "Pushup Budddy";
+const APP_DEFAULT_TITLE = "Pushup Budddy";
+const APP_TITLE_TEMPLATE = "%s - Pushup Budddy";
+const APP_DESCRIPTION = "A pushup budddy to help you get fit";
+
 export const metadata: Metadata = {
-    title: "Pushup budddy",
-    description: "A pushup budddy to help you get fit",
+    title: APP_DEFAULT_TITLE,
+    description: APP_DESCRIPTION,
     manifest: "/manifest.json",
+    applicationName: APP_NAME,
+    appleWebApp: {
+        capable: true,
+        statusBarStyle: "default",
+        title: APP_DEFAULT_TITLE,
+        // startUpImage: [],
+    },
+    formatDetection: {
+        telephone: false,
+    },
+    openGraph: {
+        type: "website",
+        siteName: APP_NAME,
+        title: {
+            default: APP_DEFAULT_TITLE,
+            template: APP_TITLE_TEMPLATE,
+        },
+        description: APP_DESCRIPTION,
+    },
+    twitter: {
+        card: "summary",
+        title: {
+            default: APP_DEFAULT_TITLE,
+            template: APP_TITLE_TEMPLATE,
+        },
+        description: APP_DESCRIPTION,
+    },
 };
+
+export const viewport: Viewport = {
+    themeColor: "#FFFFFF",
+};
+
 export default function RootLayout({
     children,
 }: {
@@ -16,32 +53,6 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <head>
-                <link
-                    rel="apple-touch-icon"
-                    sizes="180x180"
-                    href="/apple-touch-icon.png"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="32x32"
-                    href="/favicon-32x32.png"
-                />
-                <link
-                    rel="icon"
-                    type="image/png"
-                    sizes="16x16"
-                    href="/favicon-16x16.png"
-                />
-                <link
-                    rel="mask-icon"
-                    href="/safari-pinned-tab.svg"
-                    color="#5bbad5"
-                />
-                <meta name="msapplication-TileColor" content="#da532c" />
-                <meta name="theme-color" content="#ffffff" />
-            </head>
             <body className={inter.className}>{children}</body>
         </html>
     );
