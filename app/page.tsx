@@ -2,6 +2,13 @@
 import { Confetti } from "@/components/Confetti";
 import { Timer, TimerHandle } from "@/components/Timer";
 import { useEffect, useRef, useState } from "react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 // Custom hook for managing local storage
 function useLocalStorage(key: string, initialValue: number) {
@@ -72,20 +79,21 @@ export default function Home() {
 
     return (
         <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
-            <select
-                className="h-16  w-full max-w-md rounded-lg p-4 shadow-lg"
-                onChange={(event) => {
-                    const weekNumber = parseInt(event.target.value);
-                    setWeek(weekNumber);
-                }}
-                value={week}
+            <Select
+                value={week.toString()}
+                onValueChange={(value) => setWeek(parseInt(value))}
             >
-                {weeks.map((week, index) => (
-                    <option key={index} value={index}>
-                        Niveau: {index + 1}
-                    </option>
-                ))}
-            </select>
+                <SelectTrigger className="h-16 w-full max-w-md">
+                    <SelectValue placeholder="Select a level" />
+                </SelectTrigger>
+                <SelectContent>
+                    {weeks.map((week, index) => (
+                        <SelectItem key={index} value={index.toString()}>
+                            Niveau: {index + 1}
+                        </SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
             <div className="flex flex-col items-center justify-center gap-4 dark:text-white">
                 {weeks[week].map((amountOfPushups, index) => (
                     <div
