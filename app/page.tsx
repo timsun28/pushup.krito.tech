@@ -9,6 +9,17 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Check, Trophy, Dumbbell, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Custom hook for managing local storage
 function useLocalStorage(key: string, initialValue: number) {
@@ -75,65 +86,144 @@ export default function Home() {
     ];
 
     const [week, setWeek] = useLocalStorage("selectedWeek", 0);
+    const [completedSets, setCompletedSets] = useState<number[]>([]);
     const timerRef = useRef<TimerHandle | null>(null);
 
+    const currentWeekSets = weeks[week];
+    const currentSetIndex = completedSets.length;
+    const isWorkoutComplete = completedSets.length === currentWeekSets.length;
+
+    useEffect(() => {
+        if (isWorkoutComplete) {
+            setFinished(true);
+        } else {
+            setFinished(false);
+        }
+    }, [isWorkoutComplete]);
+
+    const handleSetComplete = () => {
+        if (currentSetIndex < currentWeekSets.length) {
+            setCompletedSets([...completedSets, currentSetIndex]);
+            if (currentSetIndex < currentWeekSets.length - 1) {
+                timerRef.current?.toggle();
+            }
+        }
+    };
+
+    const handleReset = () => {
+        setCompletedSets([]);
+        setFinished(false);
+    };
+
     return (
-        <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 dark:bg-slate-900">
-            <Select
-                value={week.toString()}
-                onValueChange={(value) => setWeek(parseInt(value))}
-            >
-                <SelectTrigger className="h-16 w-full max-w-md">
-                    <SelectValue placeholder="Select a level" />
-                </SelectTrigger>
-                <SelectContent>
-                    {weeks.map((week, index) => (
-                        <SelectItem key={index} value={index.toString()}>
-                            Niveau: {index + 1}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-            <div className="flex flex-col items-center justify-center gap-4 dark:text-white">
-                {weeks[week].map((amountOfPushups, index) => (
-                    <div
-                        key={index}
-                        className="flex w-full items-center justify-end gap-2"
-                    >
-                        <label
-                            htmlFor={amountOfPushups.toString()}
-                            className="text-2xl font-bold"
-                        >
-                            {amountOfPushups}
-                        </label>
-                        <input
-                            id={amountOfPushups.toString()}
-                            type="checkbox"
-                            key={index}
-                            className="h-12 w-12 rounded-lg p-4 shadow-lg"
-                            onChange={() => {
-                                // Check if all checkboxes are checked
-                                const checkboxes = document.querySelectorAll(
-                                    "input[type=checkbox]",
-                                );
-                                const checked = document.querySelectorAll(
-                                    "input[type=checkbox]:checked",
-                                );
-                                if (timerRef && timerRef.current) {
-                                    // If this is the final checkbox, don't start the timer
-                                    if (checkboxes.length !== checked.length) {
-                                        timerRef.current.toggle();
-                                    }
-                                }
-                                if (checkboxes.length === checked.length) {
-                                    setFinished(true);
-                                }
-                            }}
-                        />
+        <main className="flex min-h-screen flex-col items-center bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 p-4 text-white">
+            <div className="w-full max-w-md space-y-6">
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <div className="rounded-full bg-primary/20 p-2 text-primary">
+                            <Dumbbell className="h-6 w-6" />
+                        </div>
+                        <h1 className="text-xl font-bold tracking-tight">Pushup Tracker</h1>
                     </div>
-                ))}
+                    <Select
+                        value={week.toString()}
+                        onValueChange={(value) => {
+                            setWeek(parseInt(value));
+                            setCompletedSets([]);
+                            setFinished(false);
+                        }}
+                    >
+                        <SelectTrigger className="w-[140px] border-slate-700 bg-slate-800 text-white">
+                            <SelectValue placeholder="Select Level" />
+                        </SelectTrigger>
+                        <SelectContent className="border-slate-700 bg-slate-800 text-white">
+                            {weeks.map((_, index) => (
+                                <SelectItem key={index} value={index.toString()}>
+                                    Level {index + 1}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {/* Main Workout Card */}
+                <Card className="border-slate-700 bg-slate-800/50 backdrop-blur-sm">
+                    <CardHeader className="text-center">
+                        <CardTitle className="text-3xl font-bold text-white">
+                            {isWorkoutComplete ? "Workout Complete!" : `Set ${currentSetIndex + 1}`}
+                        </CardTitle>
+                        <CardDescription className="text-slate-400">
+                            {isWorkoutComplete
+                                ? "Great job! You've finished all sets."
+                                : `Target: ${currentWeekSets[currentSetIndex]} pushups`}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center justify-center space-y-6">
+                        {isWorkoutComplete ? (
+                            <div className="flex h-32 w-32 items-center justify-center rounded-full bg-green-500/20 text-green-500 ring-4 ring-green-500/20">
+                                <Trophy className="h-16 w-16" />
+                            </div>
+                        ) : (
+                            <div className="flex h-40 w-40 items-center justify-center rounded-full bg-primary/10 text-6xl font-black text-primary ring-8 ring-primary/20">
+                                {currentWeekSets[currentSetIndex]}
+                            </div>
+                        )}
+
+                        <div className="w-full">
+                            <Timer ref={timerRef} week={week} />
+                        </div>
+                    </CardContent>
+                    <CardFooter>
+                        {isWorkoutComplete ? (
+                            <Button 
+                                onClick={handleReset} 
+                                className="w-full bg-white text-slate-900 hover:bg-slate-200"
+                                size="lg"
+                            >
+                                Start Over
+                            </Button>
+                        ) : (
+                            <Button
+                                onClick={handleSetComplete}
+                                className="w-full text-lg font-semibold"
+                                size="lg"
+                            >
+                                <Check className="mr-2 h-5 w-5" />
+                                Complete Set
+                            </Button>
+                        )}
+                    </CardFooter>
+                </Card>
+
+                {/* Progress List */}
+                <div className="space-y-2">
+                    <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">Workout Progress</h3>
+                    <div className="grid grid-cols-5 gap-2">
+                        {currentWeekSets.map((amount, index) => {
+                            const isCompleted = completedSets.includes(index);
+                            const isCurrent = index === currentSetIndex;
+                            
+                            return (
+                                <div
+                                    key={index}
+                                    className={cn(
+                                        "flex flex-col items-center justify-center rounded-lg border p-2 transition-all",
+                                        isCompleted
+                                            ? "border-green-500/50 bg-green-500/10 text-green-500"
+                                            : isCurrent
+                                            ? "border-primary bg-primary/10 text-primary ring-2 ring-primary/20"
+                                            : "border-slate-700 bg-slate-800/50 text-slate-500"
+                                    )}
+                                >
+                                    <span className="text-xs font-medium">Set {index + 1}</span>
+                                    <span className="text-lg font-bold">{amount}</span>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
             </div>
-            <Timer ref={timerRef} week={week} />
             {finished && <Confetti />}
         </main>
     );

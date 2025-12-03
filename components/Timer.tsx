@@ -6,6 +6,8 @@ import {
     useImperativeHandle,
     useState,
 } from "react";
+import { Button } from "@/components/ui/button";
+import { Play, Pause, RotateCcw } from "lucide-react";
 
 // Custom hook for managing timer
 function useTimer(initialTime: number, isActive: boolean) {
@@ -80,26 +82,28 @@ export const Timer = forwardRef<TimerHandle, { week: number }>(
         });
 
         return (
-            <div className="flex items-center gap-4">
-                <button
-                    className=" rounded-lg border-2 border-black p-4 shadow-lg dark:border-white dark:text-white"
-                    onClick={() => {
-                        toggle();
-                    }}
-                >
-                    {isActive ? "Pause" : "Start"}
-                </button>
-                <button
-                    className=" rounded-lg border-2 border-black p-4 shadow-lg dark:border-white dark:text-white"
-                    onClick={() => {
-                        reset();
-                    }}
-                >
-                    Reset
-                </button>
-                <div className="text-2xl font-bold dark:text-white">
+            <div className="flex flex-col items-center gap-4">
+                <div className="text-6xl font-mono font-bold tracking-widest text-white">
                     {Math.floor(timer / 60)}:{timer % 60 < 10 ? "0" : ""}
                     {timer % 60}
+                </div>
+                <div className="flex items-center gap-4">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-12 w-12 rounded-full border-slate-600 bg-slate-800 text-white hover:bg-slate-700 hover:text-white"
+                        onClick={() => toggle()}
+                    >
+                        {isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="h-12 w-12 rounded-full border-slate-600 bg-slate-800 text-white hover:bg-slate-700 hover:text-white"
+                        onClick={() => reset()}
+                    >
+                        <RotateCcw className="h-6 w-6" />
+                    </Button>
                 </div>
             </div>
         );
