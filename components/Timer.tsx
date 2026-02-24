@@ -83,7 +83,7 @@ export const Timer = forwardRef<TimerHandle, { week: number }>(
 
         return (
             <div className="flex flex-col items-center gap-4">
-                <div className="text-6xl font-mono font-bold tracking-widest text-white">
+                <div className="font-mono text-6xl font-bold tracking-widest text-white">
                     {Math.floor(timer / 60)}:{timer % 60 < 10 ? "0" : ""}
                     {timer % 60}
                 </div>
@@ -94,7 +94,11 @@ export const Timer = forwardRef<TimerHandle, { week: number }>(
                         className="h-12 w-12 rounded-full border-slate-600 bg-slate-800 text-white hover:bg-slate-700 hover:text-white"
                         onClick={() => toggle()}
                     >
-                        {isActive ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
+                        {isActive ? (
+                            <Pause className="h-6 w-6" />
+                        ) : (
+                            <Play className="h-6 w-6" />
+                        )}
                     </Button>
                     <Button
                         variant="outline"

@@ -121,10 +121,12 @@ export default function Home() {
                 {/* Header */}
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="rounded-full bg-primary/20 p-2 text-primary">
+                        <div className="bg-primary/20 text-primary rounded-full p-2">
                             <Dumbbell className="h-6 w-6" />
                         </div>
-                        <h1 className="text-xl font-bold tracking-tight">Pushup Tracker</h1>
+                        <h1 className="text-xl font-bold tracking-tight">
+                            Pushup Tracker
+                        </h1>
                     </div>
                     <Select
                         value={week.toString()}
@@ -139,7 +141,10 @@ export default function Home() {
                         </SelectTrigger>
                         <SelectContent className="border-slate-700 bg-slate-800 text-white">
                             {weeks.map((_, index) => (
-                                <SelectItem key={index} value={index.toString()}>
+                                <SelectItem
+                                    key={index}
+                                    value={index.toString()}
+                                >
                                     Level {index + 1}
                                 </SelectItem>
                             ))}
@@ -151,7 +156,9 @@ export default function Home() {
                 <Card className="border-slate-700 bg-slate-800/50 backdrop-blur-sm">
                     <CardHeader className="text-center">
                         <CardTitle className="text-3xl font-bold text-white">
-                            {isWorkoutComplete ? "Workout Complete!" : `Set ${currentSetIndex + 1}`}
+                            {isWorkoutComplete
+                                ? "Workout Complete!"
+                                : `Set ${currentSetIndex + 1}`}
                         </CardTitle>
                         <CardDescription className="text-slate-400">
                             {isWorkoutComplete
@@ -165,7 +172,7 @@ export default function Home() {
                                 <Trophy className="h-16 w-16" />
                             </div>
                         ) : (
-                            <div className="flex h-40 w-40 items-center justify-center rounded-full bg-primary/10 text-6xl font-black text-primary ring-8 ring-primary/20">
+                            <div className="bg-primary/10 text-primary ring-primary/20 flex h-40 w-40 items-center justify-center rounded-full text-6xl font-black ring-8">
                                 {currentWeekSets[currentSetIndex]}
                             </div>
                         )}
@@ -176,8 +183,8 @@ export default function Home() {
                     </CardContent>
                     <CardFooter>
                         {isWorkoutComplete ? (
-                            <Button 
-                                onClick={handleReset} 
+                            <Button
+                                onClick={handleReset}
                                 className="w-full bg-white text-slate-900 hover:bg-slate-200"
                                 size="lg"
                             >
@@ -198,12 +205,14 @@ export default function Home() {
 
                 {/* Progress List */}
                 <div className="space-y-2">
-                    <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider">Workout Progress</h3>
+                    <h3 className="text-sm font-medium tracking-wider text-slate-400 uppercase">
+                        Workout Progress
+                    </h3>
                     <div className="grid grid-cols-5 gap-2">
                         {currentWeekSets.map((amount, index) => {
                             const isCompleted = completedSets.includes(index);
                             const isCurrent = index === currentSetIndex;
-                            
+
                             return (
                                 <div
                                     key={index}
@@ -212,12 +221,16 @@ export default function Home() {
                                         isCompleted
                                             ? "border-green-500/50 bg-green-500/10 text-green-500"
                                             : isCurrent
-                                            ? "border-primary bg-primary/10 text-primary ring-2 ring-primary/20"
-                                            : "border-slate-700 bg-slate-800/50 text-slate-500"
+                                              ? "border-primary bg-primary/10 text-primary ring-2 ring-primary/20"
+                                              : "border-slate-700 bg-slate-800/50 text-slate-500",
                                     )}
                                 >
-                                    <span className="text-xs font-medium">Set {index + 1}</span>
-                                    <span className="text-lg font-bold">{amount}</span>
+                                    <span className="text-xs font-medium">
+                                        Set {index + 1}
+                                    </span>
+                                    <span className="text-lg font-bold">
+                                        {amount}
+                                    </span>
                                 </div>
                             );
                         })}
